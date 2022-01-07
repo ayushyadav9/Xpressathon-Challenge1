@@ -32,6 +32,7 @@ def cityFinder(state, address):
     for add in address:
         tup = None
         tup = extractOne(add,hashedCities[state])
+        # print(tup)
         if(tup[1]>=ratio):
             ratio = tup[1]
             city = tup[0]
@@ -48,9 +49,10 @@ def stateFinder(address):
     ratio = 0
     for add in address:
         tup = extractOne(add,states)
+        # print(tup)
         if(tup[1]>=ratio):
             ratio = tup[1]
-            temp = tup[0]
+            state = tup[0]
             addState = add
     if(ratio > 90):
         address.remove(addState)
@@ -59,7 +61,7 @@ def stateFinder(address):
 
 def googleAPI(address):
     adda = ' '.join(address)
-    print(adda)
+    # print(adda)
     geocode_result = gmaps.geocode(adda)
     return geocode_result
     
@@ -93,10 +95,16 @@ def localityParser(geocode):
             if 'neighborhood' in component['types']:
                 locality = component['long_name']
                 break
+    if(locality == None):
+        for component in geocode['address_components']:
+            if 'locality' in component['types']:
+                locality = component['long_name']
+                break
     return locality
 
 def addNormalizer(address):
     geocode = googleAPI(address)[0]
+    # print(geocode)
     state = stateFinder(address)
     # locality = localityFinder(city.replace(" ", ""), address)
     locality = localityParser(geocode)
@@ -129,9 +137,10 @@ def addNormalizer(address):
 
     coordinates = str(geocode['geometry']['location']['lat']) + "," + str(geocode['geometry']['location']['lng'])
     address = address[:-2]
+    # print(address)
     length = len(address)
-    add1 = ' '.join(address[:length//2])
-    add2 = ' '.join(address[length//2 + 1: ])
+    add1 = ' '.join(address[:length//2+1])
+    add2 = ' '.join(address[length//2+1: ])
 
     finalAddress = {
         "addressline1":add1,
@@ -142,7 +151,7 @@ def addNormalizer(address):
         "pincode":pincode,
         "geocodes":coordinates
     }
-    print(address)
+    # print(address)
     # print(finalAddress)
     return finalAddress
 # addNormalizer(address)
