@@ -1,5 +1,6 @@
 from fuzzywuzzy import process
 from rapidfuzz.process import extractOne
+from rapidfuzz.fuzz import QRatio
 # from stringProcess import locality, cities, states 
 from stringProcess import hashedLocal,hashedCities, states, cities
 import googlemaps
@@ -29,10 +30,10 @@ def cityFinder(state, address):
         state = state.replace(" ", "")
 
     ratio = 0
+    print(hashedCities[state], state)
     for add in address:
         tup = None
         tup = extractOne(add,hashedCities[state])
-        # print(tup)
         if(tup[1]>=ratio):
             ratio = tup[1]
             city = tup[0]
@@ -136,11 +137,14 @@ def addNormalizer(address):
         pincode = re.sub("[^0-9]", "", address[-1])
 
     coordinates = str(geocode['geometry']['location']['lat']) + "," + str(geocode['geometry']['location']['lng'])
-    address = address[:-2]
-    # print(address)
+    print(address)
+    address = address[:-1]
     length = len(address)
     add1 = ' '.join(address[:length//2+1])
     add2 = ' '.join(address[length//2+1: ])
+
+    add1 = add1.title()
+    add2 = add2.title()
 
     finalAddress = {
         "addressline1":add1,
@@ -152,6 +156,6 @@ def addNormalizer(address):
         "geocodes":coordinates
     }
     # print(address)
-    # print(finalAddress)
+    print(finalAddress)
     return finalAddress
 # addNormalizer(address)

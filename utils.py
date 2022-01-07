@@ -20,7 +20,9 @@ acronyms = {
     "sch":"School",
     "nbr|num|no":"Number",
     "chk|chok":"Chowk",
-    "div":"Division"
+    "div":"Division",
+    "banglore|bangalore|bangalooru|bengalore|bengalooru":"bengaluru",
+    "badodara":"vadodara"
 }
 
 def expander(text):

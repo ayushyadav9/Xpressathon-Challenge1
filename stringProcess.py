@@ -19,21 +19,21 @@ for pin in pincodes['results']:
     stateKey = pin['StateName'].replace(" ", "")
     
     if stateKey in hashedCities.keys():
-        hashedCities[stateKey].append(pin['District'])
+        hashedCities[stateKey].add(pin['District'])
     else:
-        hashedCities[stateKey] = []
-        hashedCities[stateKey].append(pin['District'])
+        hashedCities[stateKey] = set()
+        hashedCities[stateKey].add(pin['District'])
     
     #Locality
     distKey = pin['District'].replace(" ", "")
 
     if distKey in hashedLocal.keys():
-        hashedLocal[distKey].append(pin['OfficeName'])
-        hashedLocal[distKey].append(pin['RegionName'])
+        hashedLocal[distKey].add(pin['OfficeName'])
+        hashedLocal[distKey].add(pin['RegionName'])
     else:
-        hashedLocal[distKey] = []
-        hashedLocal[distKey].append(pin['OfficeName'])
-        hashedLocal[distKey].append(pin['RegionName'])
+        hashedLocal[distKey] = set()
+        hashedLocal[distKey].add(pin['OfficeName'])
+        hashedLocal[distKey].add(pin['RegionName'])
     
     
     # hashedCities[pin['StateName'].replace(" ", "")].append(pin["District"])
