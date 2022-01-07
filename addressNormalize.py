@@ -1,21 +1,14 @@
-from fuzzywuzzy import process
 from rapidfuzz.process import extractOne
-from rapidfuzz.fuzz import QRatio
-# from stringProcess import locality, cities, states 
 from stringProcess import hashedLocal,hashedCities, states, cities
-import googlemaps
-import re
-from datetime import datetime
+import googlemaps, re
 
-gmaps = googlemaps.Client(key='GOOGLE_GEOCODE_API_KEY')
+gmaps = googlemaps.Client(key='GOOGLE_API_KEY')
 
 def localityFinder(city, address):
-    # city = cityFinder().replace(" ", "")
     local = ""
     ratio = 0
     for add in address:
         tup = extractOne(add,hashedLocal[city])
-        # print(tup[0], tup[1], add)
         if(tup[1]>=ratio):
             ratio = tup[1]
             local = tup[0]
@@ -24,13 +17,11 @@ def localityFinder(city, address):
 
 
 def cityFinder(state, address):
-    # state = stateFinder().replace(" ", "")
     city = ""
     if(state != None):
         state = state.replace(" ", "")
 
     ratio = 0
-    print(hashedCities[state], state)
     for add in address:
         tup = None
         tup = extractOne(add,hashedCities[state])
@@ -50,7 +41,6 @@ def stateFinder(address):
     ratio = 0
     for add in address:
         tup = extractOne(add,states)
-        # print(tup)
         if(tup[1]>=ratio):
             ratio = tup[1]
             state = tup[0]
@@ -62,7 +52,6 @@ def stateFinder(address):
 
 def googleAPI(address):
     adda = ' '.join(address)
-    # print(adda)
     geocode_result = gmaps.geocode(adda)
     return geocode_result
     
@@ -105,10 +94,9 @@ def localityParser(geocode):
 
 def addNormalizer(address):
     geocode = googleAPI(address)[0]
-    # print(geocode)
     state = stateFinder(address)
-    # locality = localityFinder(city.replace(" ", ""), address)
     locality = localityParser(geocode)
+
     if(state == None):
         for component in geocode['address_components']:
             if 'administrative_area_level_1' in component['types']:
@@ -116,6 +104,7 @@ def addNormalizer(address):
                 break
             
     city = cityFinder(state, address)
+
     if(city == None):
         for component in geocode['address_components']:
             if 'locality' in component['types']:
@@ -137,12 +126,11 @@ def addNormalizer(address):
         pincode = re.sub("[^0-9]", "", address[-1])
 
     coordinates = str(geocode['geometry']['location']['lat']) + "," + str(geocode['geometry']['location']['lng'])
-    print(address)
+
     address = address[:-1]
     length = len(address)
     add1 = ' '.join(address[:length//2+1])
     add2 = ' '.join(address[length//2+1: ])
-
     add1 = add1.title()
     add2 = add2.title()
 
@@ -155,7 +143,4 @@ def addNormalizer(address):
         "pincode":pincode,
         "geocodes":coordinates
     }
-    # print(address)
-    print(finalAddress)
     return finalAddress
-# addNormalizer(address)
