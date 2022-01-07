@@ -37,8 +37,8 @@ This project aims to establish a Python framework to perform Indian Address Stan
 
 <p align="right"><br/></p>
 
-## **Sample Input**
-<br>
+## **Sample Inputs**
+
 
 ### **Input Address**
 ----------------
@@ -99,8 +99,6 @@ _Below are the steps to clone the repository and  setting up the app in local._
 * Python must be installed on your computer<br>
 * You must have an google maps API key which can be accessed from [here](https://console.cloud.google.com/google/maps-apis/start)
 
-<br>
-<br>
 
 1. Clone the Repository
    ```sh
